@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS tag;
+
+CREATE TABLE tag (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100)
+);
+
+GRANT ALL ON tag TO accounting;
