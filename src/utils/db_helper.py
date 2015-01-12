@@ -29,7 +29,7 @@ class DBHelper(object):
             result[names[i]] = values[i]
         return result
 
-    def common(self, proc_name, type, args):
+    def common(self, proc_name, type, args, write=False):
         cur = self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.callproc(proc_name, args)
         attr = getattr(cur, type, 'fetchall')
@@ -39,6 +39,8 @@ class DBHelper(object):
             result = self.result_to_dict(col_names, values)
         else:
             result = [self.result_to_dict(col_names, value) for value in values]
+        if write:
+            self.conn.commit()
         cur.close()
         return result
 
@@ -52,8 +54,10 @@ class DBHelper(object):
         return self.common(proc_name, 'fetchone', args)
 
     def create(self, proc_name, args):
-        return self.common(proc_name, 'fetchone', args)
+        return self.common(proc_name, 'fetchone', args, write=True)
 
     def update(self, proc_name, args):
-        return self.common(proc_name, 'fetchone', args)
+        return self.common(proc_name, 'fetchone', args, write=True)
 
+    def delete(self, proc_name, args):
+        return self.common(proc_name, 'fetchone', args, write=True)

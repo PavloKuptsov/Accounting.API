@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 from dateutil import parser
 
 
@@ -31,8 +31,8 @@ class BaseModel(object):
                     if not value and type(getattr(object, attr)) == unicode:
                         value = u''
                     if value and type(getattr(object, attr)) != type(value) and getattr(object, attr) is not None:
-                        if type(getattr(object, attr)) is datetime:
-                            value = parser.parse(value)
+                        if type(getattr(object, attr)) is date:
+                            value = parser.parse(value).date()
                         else:
                             value = type(getattr(object, attr))(value)
                     setattr(object, attr, value)
@@ -41,19 +41,6 @@ class BaseModel(object):
             except Exception, e:
                 raise Exception('%s for \'%s\' attribute.' % (e.message, attr))
         return object
-
-
-    def preprocess(self):
-        result = self.__class__()
-        for attr in self.__dir__():
-            attribute = getattr(self, attr, u'')
-            if isinstance(attribute, BoundReferenceSetBase):
-                result.__setattr__(attr[1:], [i for i in attribute.__iter__()])
-            else:
-                result.__setattr__(attr, attribute)
-            # elif isinstance(attribute, Reference):
-            #     attribute =
-        return result
 
     def __dir__(self):
         return []

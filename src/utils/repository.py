@@ -1,6 +1,8 @@
 from models.account import Account
 from models.balance import Balance
+from models.category import Category
 from models.currency import Currency
+from models.database_operation_result import DatabaseOperationResult
 from models.transaction import Transaction
 from utils.db_helper import DBHelper
 
@@ -42,4 +44,21 @@ class Repository(object):
 
     def list_transactions(self):
         result = self.db.list('transactions_list')
-        return result and [Transaction.create(i) for i in result]
+        return result and [Transaction.create(i) for i in result] or []
+
+    def list_categories(self):
+        result = self.db.list('categories_list')
+        return result and [Category.create(i) for i in result] or []
+
+    def create_transaction(self, trans):
+        proc_name = 'transaction_create'
+        result = self.db.create(proc_name,
+                                (trans.type_id,
+                                 trans.amount,
+                                 trans.previous_balance,
+                                 trans.balance_id,
+                                 trans.target_balance_id,
+                                 trans.category_id,
+                                 trans.comment,
+                                 trans.date))
+        return result and DatabaseOperationResult(True, result[proc_name])
