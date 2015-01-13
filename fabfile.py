@@ -12,6 +12,7 @@ def compile_sql():
     result_file = open(FILE_PATH, 'w+')
     compile_files_in_folder('tables', result_file)
     compile_files_in_folder('procedures', result_file)
+    compile_files_in_folder('triggers', result_file)
     result_file.close()
 
 def compile_files_in_folder(folder_name, result_file):
