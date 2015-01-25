@@ -7,10 +7,9 @@ CREATE TABLE category (
     type_id INT
 );
 
-INSERT INTO category ( id, name, parent_category_id, type_id ) VALUES
-    (1, 'All', NULL, 1),
-    (2, 'All', NULL, 2),
-    (3, 'Correction', 1, 1),
-    (4, 'Salary', 2, 2);
+CREATE INDEX idx_id_category
+ON category (id);
 
-GRANT ALL ON account TO accounting;
+INSERT INTO category ( id, name, parent_category_id, type_id ) VALUES
+    (1, 'Correction', NULL, 1),
+    (2, 'Salary', NULL, 2);

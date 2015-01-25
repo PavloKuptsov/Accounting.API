@@ -7,8 +7,9 @@ CREATE TABLE balance (
     balance DECIMAL
 );
 
-INSERT INTO balance ( id, account_id, currency_id, balance ) VALUES
-    (1, 1, 1, 0),
-    (2, 1, 2, 500);
+CREATE INDEX idx_id_balance
+ON balance (id);
 
-GRANT ALL ON balance TO accounting;
+INSERT INTO balance ( id, account_id, currency_id, balance ) VALUES
+    (1, 1, 1, 2500),
+    (2, 1, 2, 500);

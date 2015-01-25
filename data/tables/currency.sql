@@ -10,5 +10,3 @@ CREATE TABLE currency (
 INSERT INTO currency ( id, name, short_name, exchange_rate ) VALUES
     (1, 'Ukrainian Hryvna', 'UAH', 1),
     (2, 'US Dollar', 'USD', 15);
-
-GRANT ALL ON currency TO accounting;

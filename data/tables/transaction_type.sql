@@ -9,5 +9,3 @@ INSERT INTO transaction_type ( id, name ) VALUES
     (1, 'Spending'),
     (2, 'Income'),
     (3, 'Transfer');
-
-GRANT ALL ON transaction_type TO accounting;

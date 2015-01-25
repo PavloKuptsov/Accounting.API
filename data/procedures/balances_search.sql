@@ -17,6 +17,7 @@ BEGIN
         b.currency_id,
         b.balance
     FROM balance b
-    WHERE b.account_id = p_account_id;
+    WHERE b.account_id = p_account_id
+    ORDER BY b.currency_id;
 END; $$
 LANGUAGE PLPGSQL;

@@ -13,6 +13,7 @@ CREATE FUNCTION transaction_create(
 RETURNS INT AS $$
 DECLARE
     v_new_transaction_id INT;
+    v_previous_balance DECIMAL;
 BEGIN
     INSERT INTO transaction (
         type_id,

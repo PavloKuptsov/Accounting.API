@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS transaction;
+DROP TABLE IF EXISTS transaction CASCADE;
 
 CREATE TABLE transaction (
     id SERIAL PRIMARY KEY,
@@ -12,4 +12,8 @@ CREATE TABLE transaction (
     date DATE
 );
 
-GRANT ALL ON transaction TO accounting;
+CREATE INDEX idx_id_transaction
+ON transaction (id);
+
+CREATE INDEX idx_date_transaction
+ON transaction (date);

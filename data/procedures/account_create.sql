@@ -1,8 +1,9 @@
-DROP FUNCTION IF EXISTS account_create(VARCHAR, INT);
+DROP FUNCTION IF EXISTS account_create(VARCHAR, INT, DECIMAL);
 
 CREATE FUNCTION account_create(
     p_name VARCHAR(50),
-    p_default_currency_id INT
+    p_default_currency_id INT,
+    p_balance DECIMAL
 )
 RETURNS INT AS $$
 DECLARE
@@ -25,7 +26,7 @@ BEGIN
     VALUES (
         v_new_account_id,
         p_default_currency_id,
-        0
+        p_balance
     );
     RETURN v_new_account_id;
 END; $$

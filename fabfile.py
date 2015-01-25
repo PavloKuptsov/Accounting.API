@@ -11,6 +11,7 @@ def compile_sql():
         pass
     result_file = open(FILE_PATH, 'w+')
     compile_files_in_folder('tables', result_file)
+    compile_files_in_folder('views', result_file)
     compile_files_in_folder('procedures', result_file)
     compile_files_in_folder('triggers', result_file)
     result_file.close()

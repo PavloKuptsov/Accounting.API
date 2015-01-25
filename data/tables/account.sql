@@ -2,12 +2,14 @@ DROP TABLE IF EXISTS account;
 
 CREATE TABLE account (
     id SERIAL PRIMARY KEY,
+    type_id INT,
     name VARCHAR(100),
     owner_id INT,
     default_currency_id INT
 );
 
-INSERT INTO account ( id, name, owner_id, default_currency_id ) VALUES
-    (1, 'Cash', NULL, 1);
+CREATE INDEX idx_id_account
+ON account (id);
 
-GRANT ALL ON account TO accounting;
+INSERT INTO account ( id, type_id, name, owner_id, default_currency_id ) VALUES
+    (1, NULL, 'Cash', NULL, 1);
