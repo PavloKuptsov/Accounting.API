@@ -62,3 +62,9 @@ class Repository(object):
                                  trans.comment,
                                  trans.date))
         return result and DatabaseOperationResult(True, result[proc_name])
+
+    def delete_transaction(self, transaction_id):
+        proc_name = 'transaction_delete'
+        result = self.db.delete('transaction_delete',
+                                (transaction_id,))
+        return result and DatabaseOperationResult(True, result[proc_name])

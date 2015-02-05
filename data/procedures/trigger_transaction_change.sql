@@ -9,22 +9,22 @@ BEGIN
         v_transaction_amount_id = NEW.amount;
     ELSE v_transaction_amount_id = -(NEW.amount);
     END IF;
+    --changing next transaction's previous balance
     UPDATE transaction
     SET previous_balance = NEW.previous_balance + v_transaction_amount_id
     WHERE id = util_get_next_transaction(NEW.id, NEW.balance_id);
+    --changing overall balance if transaction is last
     IF (SELECT * FROM util_is_last_transaction(NEW.id, NEW.balance_id))
     THEN
         UPDATE balance
         SET balance = NEW.previous_balance + v_transaction_amount_id
         WHERE id = NEW.balance_id;
     END IF;
+    --changing target balance if transaction is transfer
     IF NEW.type_id = 3 THEN
         UPDATE balance
-        SET balance = balance - OLD.amount
+        SET balance = balance - OLD.amount+ NEW.amount
         WHERE id = OLD.target_balance_id;
-        UPDATE balance
-        SET balance = balance + NEW.amount
-        WHERE id = NEW.target_balance_id;
     END IF;
     RETURN NEW;
 END; $$

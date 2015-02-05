@@ -1,11 +1,12 @@
-DROP FUNCTION IF EXISTS transacton_delete(INT);
+DROP FUNCTION IF EXISTS transaction_delete(INT);
 
-CREATE FUNCTION transacton_delete(
+CREATE FUNCTION transaction_delete(
     p_id INT
 )
-RETURNS VOID AS $$
+RETURNS BOOL AS $$
 BEGIN
     DELETE FROM transaction
     WHERE id = p_id;
+    RETURN TRUE;
 END; $$
 LANGUAGE PLPGSQL;
