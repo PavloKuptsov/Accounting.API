@@ -2,7 +2,9 @@ import os
 
 DATA_FOLDER = 'data/'
 FILENAME = 'sql_compiled.sql'
+PROCEDURES_FILENAME = 'procedures_compiled.sql'
 FILE_PATH = DATA_FOLDER + FILENAME
+PROCEDURES_FILE_PATH = DATA_FOLDER + PROCEDURES_FILENAME
 
 def compile_sql():
     try:
@@ -28,3 +30,13 @@ def compile_files_in_folder(folder_name, result_file):
                 result_file.write(data)
                 result_file.write('\n\n\n')
                 f.close()
+
+def compile_procedures():
+    try:
+        os.remove(PROCEDURES_FILE_PATH)
+    except OSError:
+        pass
+    result_file = open(PROCEDURES_FILE_PATH, 'w+')
+    compile_files_in_folder('procedures', result_file)
+    compile_files_in_folder('triggers', result_file)
+    result_file.close()
