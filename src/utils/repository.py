@@ -60,7 +60,8 @@ class Repository(object):
                                  trans.target_balance_id,
                                  trans.category_id,
                                  trans.comment,
-                                 trans.date))
+                                 trans.date,
+                                 trans.exchange_rate))
         return result and DatabaseOperationResult(True, result[proc_name])
 
     def delete_transaction(self, transaction_id):

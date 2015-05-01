@@ -9,7 +9,8 @@ CREATE TABLE transaction (
     previous_balance DECIMAL,
     category_id INT,
     comment VARCHAR(255),
-    date DATE
+    date DATE,
+    exchange_rate DECIMAL DEFAULT 1
 );
 
 CREATE INDEX idx_id_transaction

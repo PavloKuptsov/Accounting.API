@@ -12,7 +12,8 @@ CREATE TABLE transaction (
     previous_balance DECIMAL,
     category_id INT,
     comment VARCHAR(255),
-    date DATE
+    date DATE,
+    exchange_rate DECIMAL DEFAULT 1
 );
 
 CREATE INDEX idx_id_transaction
@@ -52,13 +53,13 @@ DROP TABLE IF EXISTS currency;
 CREATE TABLE currency (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100),
-    short_name VARCHAR(3),
-    exchange_rate DECIMAL
+    short_name VARCHAR(3)
 );
 
 INSERT INTO currency ( id, name, short_name, exchange_rate ) VALUES
-    (1, 'Ukrainian Hryvna', 'UAH', 1),
-    (2, 'US Dollar', 'USD', 15);
+    (1, 'Ukrainian Hryvna', 'UAH'),
+    (2, 'US Dollar', 'USD'),
+    (3, 'Euro', 'EUR');
 
 
 DROP TABLE IF EXISTS account;
@@ -75,7 +76,8 @@ CREATE INDEX idx_id_account
 ON account (id);
 
 INSERT INTO account ( id, type_id, name, owner_id, default_currency_id ) VALUES
-    (1, NULL, 'Cash', NULL, 1);
+    (1, NULL, 'Cash', NULL, 1),
+    (2, NULL, 'Credit Card', NULL, 1);
 
 
 DROP TABLE IF EXISTS transaction_type;
@@ -105,7 +107,8 @@ ON balance (id);
 
 INSERT INTO balance ( id, account_id, currency_id, balance ) VALUES
     (1, 1, 1, 2500),
-    (2, 1, 2, 500);
+    (2, 1, 2, 500),
+    (3, 2, 1, 10000);
 
 
 --- VIEWS ---
@@ -159,22 +162,22 @@ BEGIN
         v_transaction_amount_id = NEW.amount;
     ELSE v_transaction_amount_id = -(NEW.amount);
     END IF;
+    --changing next transaction's previous balance
     UPDATE transaction
     SET previous_balance = NEW.previous_balance + v_transaction_amount_id
     WHERE id = util_get_next_transaction(NEW.id, NEW.balance_id);
+    --changing overall balance if transaction is last
     IF (SELECT * FROM util_is_last_transaction(NEW.id, NEW.balance_id))
     THEN
         UPDATE balance
         SET balance = NEW.previous_balance + v_transaction_amount_id
         WHERE id = NEW.balance_id;
     END IF;
+    --changing target balance if transaction is transfer
     IF NEW.type_id = 3 THEN
         UPDATE balance
-        SET balance = balance - OLD.amount
+        SET balance = balance - OLD.amount*OLD.exchange_rate + NEW.amount*NEW.exchange_rate
         WHERE id = OLD.target_balance_id;
-        UPDATE balance
-        SET balance = balance + NEW.amount
-        WHERE id = NEW.target_balance_id;
     END IF;
     RETURN NEW;
 END; $$
@@ -401,7 +404,8 @@ CREATE FUNCTION transaction_create(
     p_target_balance_id INT,
     p_category_id INT,
     p_comment VARCHAR(255),
-    p_date DATE
+    p_date DATE,
+    p_rate DECIMAL
 )
 RETURNS INT AS $$
 DECLARE
@@ -416,7 +420,8 @@ BEGIN
         balance_id,
         category_id,
         comment,
-        date
+        date,
+        exchange_rate
     )
     VALUES (
         p_type_id,
@@ -426,7 +431,8 @@ BEGIN
         p_balance_id,
         p_category_id,
         p_comment,
-        p_date
+        p_date,
+        p_rate
     )
     RETURNING id INTO v_new_transaction_id;
 
@@ -441,11 +447,26 @@ DROP FUNCTION IF EXISTS trigger_transaction_delete() CASCADE;
 
 CREATE FUNCTION trigger_transaction_delete()
 RETURNS trigger AS $$
+DECLARE
+    v_transaction_amount_id DECIMAL;
 BEGIN
-    UPDATE transaction
-    SET previous_balance = OLD.previous_balance
-    WHERE id = util_get_next_transaction(OLD.id, OLD.balance_id);
-    RETURN NEW;
+    IF NOT (SELECT * FROM util_is_last_transaction(OLD.id, OLD.balance_id))
+    THEN
+        UPDATE transaction
+        SET previous_balance = OLD.previous_balance
+        WHERE id = util_get_next_transaction(OLD.id, OLD.balance_id);
+    ELSE
+        UPDATE balance
+        SET balance = OLD.previous_balance
+        WHERE id = OLD.balance_id;
+        --changing target balance if transaction is transfer
+        IF OLD.type_id = 3 THEN
+            UPDATE balance
+            SET balance = balance - OLD.amount*OLD.exchange_rate
+            WHERE id = OLD.target_balance_id;
+        END IF;
+    END IF;
+    RETURN OLD;
 END; $$
 LANGUAGE PLPGSQL;
 
@@ -502,16 +523,14 @@ CREATE FUNCTION currencies_list()
 RETURNS TABLE (
     id INT,
     name VARCHAR(100),
-    short_name VARCHAR(3),
-    exchange_rate DECIMAL
+    short_name VARCHAR(3)
 ) AS $$
 BEGIN
     RETURN QUERY
     SELECT
         c.id,
         c.name,
-        c.short_name,
-        c.exchange_rate
+        c.short_name
     FROM currency c;
 END; $$
 LANGUAGE PLPGSQL;
@@ -524,7 +543,8 @@ CREATE FUNCTION balance_transaction_change(
     p_amount DECIMAL,
     p_balance_id INT,
     p_target_balance_id INT,
-    p_previous_balance DECIMAL
+    p_previous_balance DECIMAL,
+    p_rate DECIMAL
 )
 RETURNS void AS $$
 BEGIN
@@ -534,7 +554,7 @@ BEGIN
         PERFORM balance_change(p_balance_id, p_previous_balance + p_amount);
     ELSE
         PERFORM balance_change(p_balance_id, p_previous_balance - p_amount);
-        PERFORM balance_change(p_target_balance_id, p_previous_balance + p_amount);
+        PERFORM balance_change(p_target_balance_id, p_previous_balance + p_amount*p_rate);
     END IF;
 END; $$
 LANGUAGE PLPGSQL;
@@ -630,7 +650,8 @@ CREATE FUNCTION transaction_change(
     p_target_balance_id INT,
     p_category_id INT,
     p_comment VARCHAR(255),
-    p_date DATE
+    p_date DATE,
+    p_rate DECIMAL
 )
 RETURNS VOID AS $$
 BEGIN
@@ -643,21 +664,23 @@ BEGIN
         balance_id = p_balance_id,
         category_id = p_category_id,
         comment = p_comment,
-        date = p_date
+        date = p_date,
+        exchange_rate = p_rate
     WHERE id = p_id;
 END; $$
 LANGUAGE PLPGSQL;
 
 
-DROP FUNCTION IF EXISTS transacton_delete(INT);
+DROP FUNCTION IF EXISTS transaction_delete(INT);
 
-CREATE FUNCTION transacton_delete(
+CREATE FUNCTION transaction_delete(
     p_id INT
 )
-RETURNS VOID AS $$
+RETURNS BOOL AS $$
 BEGIN
     DELETE FROM transaction
     WHERE id = p_id;
+    RETURN TRUE;
 END; $$
 LANGUAGE PLPGSQL;
 

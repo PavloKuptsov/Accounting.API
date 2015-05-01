@@ -17,7 +17,7 @@ BEGIN
         --changing target balance if transaction is transfer
         IF OLD.type_id = 3 THEN
             UPDATE balance
-            SET balance = balance - OLD.amount
+            SET balance = balance - OLD.amount*OLD.exchange_rate
             WHERE id = OLD.target_balance_id;
         END IF;
     END IF;

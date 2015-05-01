@@ -12,4 +12,5 @@ ON balance (id);
 
 INSERT INTO balance ( id, account_id, currency_id, balance ) VALUES
     (1, 1, 1, 2500),
-    (2, 1, 2, 500);
+    (2, 1, 2, 500),
+    (3, 2, 1, 10000);
