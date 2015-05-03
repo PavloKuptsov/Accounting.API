@@ -5,12 +5,11 @@ RETURNS TABLE (
     id INT,
     type_id INT,
     amount DECIMAL,
-    previous_balance DECIMAL,
     balance_id INT,
-    target_balance_id INT,
     category_id INT,
     comment VARCHAR(255),
-    date DATE
+    date DATE,
+    target_balance_id INT
 ) AS $$
 BEGIN
     RETURN QUERY
@@ -18,13 +17,14 @@ BEGIN
         t.id,
         t.type_id,
         t.amount,
-        t.previous_balance,
         t.balance_id,
-        t.target_balance_id,
         t.category_id,
         t.comment,
-        t.date
+        t.date,
+        t1.balance_id AS target_balance_id
     FROM transaction t
+    LEFT JOIN transaction AS t1 ON t.id = t1.child_to
+    WHERE t.type_id != 4
     ORDER BY t.date;
 END;
 $$

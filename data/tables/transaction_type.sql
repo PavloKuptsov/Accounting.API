@@ -8,4 +8,5 @@ CREATE TABLE transaction_type (
 INSERT INTO transaction_type ( id, name ) VALUES
     (1, 'Spending'),
     (2, 'Income'),
-    (3, 'Transfer');
+    (3, 'Transfer parent'),
+    (4, 'Transfer child');

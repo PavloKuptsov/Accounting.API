@@ -8,5 +8,5 @@ CREATE TABLE currency (
 
 INSERT INTO currency ( id, name, short_name ) VALUES
     (1, 'Ukrainian Hryvna', 'UAH'),
-    (2, 'US Dollar', 'USD'),
-    (3, 'Euro', 'EUR');
+    (2, 'US Dollar', 'USD');
+--    (3, 'Euro', 'EUR');

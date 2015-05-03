@@ -55,7 +55,6 @@ class Repository(object):
         result = self.db.create(proc_name,
                                 (trans.type_id,
                                  trans.amount,
-                                 trans.previous_balance,
                                  trans.balance_id,
                                  trans.target_balance_id,
                                  trans.category_id,

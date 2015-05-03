@@ -10,12 +10,10 @@ DECLARE
     v_new_account_id INT;
 BEGIN
     INSERT INTO account (
-        name,
-        default_currency_id
+        name
     )
     VALUES (
-        p_name,
-        p_default_currency_id
+        p_name
     )
     RETURNING id INTO v_new_account_id;
     INSERT INTO balance (

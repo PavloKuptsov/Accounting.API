@@ -5,12 +5,11 @@ CREATE TABLE transaction (
     type_id INT,
     amount DECIMAL,
     balance_id INT,
-    target_balance_id INT,
-    previous_balance DECIMAL,
     category_id INT,
     comment VARCHAR(255),
     date DATE,
-    exchange_rate DECIMAL DEFAULT 1
+    exchange_rate DECIMAL DEFAULT 1,
+    child_to INT DEFAULT NULL
 );
 
 CREATE INDEX idx_id_transaction
