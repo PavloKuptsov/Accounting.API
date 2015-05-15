@@ -1,4 +1,6 @@
+from flask import request
 from base_handler import BaseHandler
+from models.category import Category
 
 
 class CategoriesHandler(BaseHandler):
@@ -7,4 +9,7 @@ class CategoriesHandler(BaseHandler):
         return self.json_response(categories)
 
     def post(self):
-        pass
+        data = request.form
+        category = Category.create(data)
+        result = self.repository.create_category(category)
+        return self.json_response(result)

@@ -65,6 +65,29 @@ class Repository(object):
 
     def delete_transaction(self, transaction_id):
         proc_name = 'transaction_delete'
-        result = self.db.delete('transaction_delete',
+        result = self.db.delete(proc_name,
                                 (transaction_id,))
         return result and DatabaseOperationResult(True, result[proc_name])
+
+    def create_category(self, category):
+        proc_name = 'category_create'
+        result = self.db.create(proc_name,
+                                (category.name,
+                                 category.parent_category_id,
+                                 category.type_id))
+        return result
+
+    def change_category(self, category):
+        proc_name = 'category_change'
+        result = self.db.update(proc_name,
+                                (category.id,
+                                 category.name,
+                                 category.parent_category_id,
+                                 category.type_id))
+        return result
+
+    def delete_category(self, category_id):
+        proc_name = 'category_delete'
+        result = self.db.delete(proc_name,
+                                (category_id))
+        return result

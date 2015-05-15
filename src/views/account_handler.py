@@ -6,8 +6,5 @@ class AccountHandler(BaseHandler):
         account = self.repository.get_account(id)
         return self.json_response(account)
 
-    def post(self):
-        pass
-
     def put(self):
         pass
