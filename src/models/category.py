@@ -1,12 +1,14 @@
-from models.base_model import BaseModel
+from base_model import BaseModel
 
 
 class Category(BaseModel):
-    id = 0
-    name = u''
-    parent_category_id = None
-    type_id = 0
-    new_category_id = 0
+    def __init__(self, category_id, name, parent_category_id, type_id, new_category_id):
+        self.category_id = category_id
+        self.name = name
+        self.parent_category_id = parent_category_id
+        self.type_id = type_id
+        self.new_category_id = new_category_id
 
-    def __dir__(self):
-        return ['id', 'name', 'parent_category_id', 'type_id', 'new_category_id']
+    @staticmethod
+    def __dir__():
+        return ['category_id', 'name', 'parent_category_id', 'type_id', 'new_category_id']

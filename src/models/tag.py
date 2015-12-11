@@ -1,11 +1,11 @@
-from storm.locals import *
-from models.base_model import BaseModel
+from base_model import BaseModel
 
 
 class Tag(BaseModel):
-    __storm_table__ = 'tag'
-    id = Int(primary=True)
-    name = Unicode()
+    def __init__(self, tag_id, name):
+        self.tag_id = tag_id
+        self.name = name
 
-    def __dir__(self):
-        return ['id', 'name']
+    @staticmethod
+    def __dir__():
+        return ['tag_id', 'name']

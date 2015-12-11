@@ -1,10 +1,12 @@
-from models.base_model import BaseModel
+from base_model import BaseModel
 
 
 class Currency(BaseModel):
-    id = 0
-    name = u''
-    short_name = u''
+    def __init__(self, currency_id, name, short_name):
+        self.currency_id = currency_id
+        self.name = name
+        self.short_name = short_name
 
-    def __dir__(self):
-        return ['id', 'name', 'short_name']
+    @staticmethod
+    def __dir__():
+        return ['currency_id', 'name', 'short_name']

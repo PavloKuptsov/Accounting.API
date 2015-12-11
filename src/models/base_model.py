@@ -17,30 +17,31 @@ class BaseModel(object):
 
     @classmethod
     def create(cls, data):
-        object = cls()
+        obj = cls()
         for attr, value in data.items():
             attr = str(attr)
             try:
-                if hasattr(object, attr):
-                    preprocess_method = getattr(object, 'preprocess_' + attr) \
-                        if hasattr(object, 'preprocess_' + attr) else None
+                if hasattr(obj, attr):
+                    preprocess_method = getattr(obj, 'preprocess_' + attr) \
+                        if hasattr(obj, 'preprocess_' + attr) else None
                     if callable(preprocess_method):
                         value = preprocess_method(value)
-                    if not value and type(getattr(object, attr)) == str:
+                    if not value and type(getattr(obj, attr)) == str:
                         value = u''
-                    if not value and type(getattr(object, attr)) == unicode:
+                    if not value and type(getattr(obj, attr)) == unicode:
                         value = u''
-                    if value and type(getattr(object, attr)) != type(value) and getattr(object, attr) is not None:
-                        if type(getattr(object, attr)) is date:
+                    if value and type(getattr(obj, attr)) != type(value) and getattr(obj, attr) is not None:
+                        if type(getattr(obj, attr)) is date:
                             value = parser.parse(value).date()
                         else:
-                            value = type(getattr(object, attr))(value)
-                    setattr(object, attr, value)
+                            value = type(getattr(obj, attr))(value)
+                    setattr(obj, attr, value)
                 else:
-                    object.attr = value
+                    obj.attr = value
             except Exception, e:
                 raise Exception('%s for \'%s\' attribute.' % (e.message, attr))
-        return object
+        return obj
 
-    def __dir__(self):
+    @staticmethod
+    def __dir__():
         return []

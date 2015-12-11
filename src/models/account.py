@@ -2,15 +2,14 @@ from base_model import BaseModel
 
 
 class Account(BaseModel):
-    id = 0
-    type_id = 0
-    name = u''
-    owner_id = 0
-    default_currency_id = 0
-    balances = []
+    def __init__(self, account_id, type_id, name, owner_id, default_currency_id, balances):
+        self.account_id = account_id
+        self.type_id = type_id
+        self.name = name
+        self.owner_id = owner_id
+        self.default_currency_id = default_currency_id
+        self.balances = balances
 
-    def __dir__(self):
+    @staticmethod
+    def __dir__():
         return ['id', 'type_id', 'name', 'owner_id', 'default_currency_id', 'balances']
-
-    def preprocess_balances(self):
-        pass

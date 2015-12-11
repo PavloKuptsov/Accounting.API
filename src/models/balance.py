@@ -1,13 +1,14 @@
-from models.base_model import BaseModel
-from models.currency import Currency
+from base_model import BaseModel
 
 
 class Balance(BaseModel):
-    id = 0
-    account_id = 0
-    currency_id = 0
-    balance = 0.0
-    currency = Currency()
+    def __init__(self, balance_id, account_id, currency_id, balance, currency):
+        self.balance_id = balance_id
+        self.account_id = account_id
+        self.currency_id = currency_id
+        self.balance = balance
+        self.currency = currency
 
-    def __dir__(self):
-        return ['id', 'account_id', 'currency_id', 'balance', 'currency']
+    @staticmethod
+    def __dir__():
+        return ['balance_id', 'account_id', 'currency_id', 'balance', 'currency']
