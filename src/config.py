@@ -1,3 +1,7 @@
+from flask.ext.sqlalchemy import SQLAlchemy
+
+from custom_json_encoder import CustomJSONEncoder
+
 DB_HOST = 'localhost'
 DB_PORT = 5432
 DB_NAME = 'accounting'
@@ -13,3 +17,11 @@ RESPONSE_SERVER_ERROR = 500
 RESULT_STATUS = 'status'
 RESULT_RESPONSE = 'response'
 RESULT_ERRORS = 'errors'
+
+DB = SQLAlchemy()
+
+
+class MyConfig(object):
+    RESTFUL_JSON = {'cls': CustomJSONEncoder}
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///C:\\accounting.sqlite'
+    SQLALCHEMY_TRACK_MODIFICATIONS = True

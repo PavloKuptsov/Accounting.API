@@ -1,7 +1,21 @@
-from base_model import BaseModel
+from sqlalchemy import Column, Integer, Numeric, Unicode, Date
+
+from config import DB
 
 
-class Transaction(BaseModel):
+class Transaction(DB.Model):
+    __tablename__ = 'transaction'
+
+    transaction_id = Column(Integer, primary_key=True)
+    transaction_type_id = Column(Integer)
+    amount = Column(Numeric(precision=2))
+    balance_id = Column(Integer)
+    category_id = Column(Integer)
+    comment = Column(Unicode(255))
+    date = Column(Date)
+    exchange_rate = Column(Numeric(precision=2), default=1)
+    child_to = Column(Integer, default=None)
+
     def __init__(self, transaction_id, transaction_type_id, amount, balance_id, target_balance_id, previous_balance,
                  category_id, comment, date, exchange_rate):
         self.transaction_id = transaction_id

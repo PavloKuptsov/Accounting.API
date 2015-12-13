@@ -2,7 +2,9 @@ from datetime import date
 from dateutil import parser
 
 
+
 class BaseModel(object):
+
     def to_dict(self):
         result = {}
         for attr in self.__dir__():
