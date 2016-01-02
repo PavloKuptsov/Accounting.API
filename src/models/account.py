@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, Column, Unicode
+from sqlalchemy import Integer, Column, Unicode, ForeignKey
 from sqlalchemy.orm import relationship
 
 from config import DB
@@ -10,17 +10,21 @@ class Account(DB.Model):
     account_id = Column(Integer, primary_key=True)
     type_id = Column(Integer)
     name = Column(Unicode(100))
-    owner_id = Column(Integer)
-    balances = relationship(Balance)
+    user_id = Column(Integer, ForeignKey('user.user_id'))
+    balances = relationship(Balance, cascade='all,delete')
 
-    def __init__(self, account_id, type_id, name, owner_id, default_currency_id, balances):
-        self.account_id = account_id
+    user = relationship('User', cascade='all,delete', back_populates='accounts')
+
+    def __init__(self, type_id, name, currency_id, balance):
         self.type_id = type_id
         self.name = name
-        self.owner_id = owner_id
-        self.default_currency_id = default_currency_id
-        self.balances = balances
+        self.balances = [Balance(currency_id, balance)]
+
 
     @staticmethod
     def __dir__():
-        return ['account_id', 'type_id', 'name', 'owner_id', 'balances']
+        return ['account_id', 'type_id', 'name', 'user_id', 'balances']
+
+    def __repr__(self):
+        return 'Account %s, type_id %s, user_id %s, balances %s' % \
+               (self.name, self.type_id, self.user_id, self.balances)

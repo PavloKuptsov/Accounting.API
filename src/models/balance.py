@@ -9,17 +9,17 @@ class Balance(DB.Model):
     balance_id = Column(Integer, primary_key=True)
     account_id = Column(Integer, ForeignKey('account.account_id'))
     currency_id = Column(Integer)
-    balance = Column(Numeric(precision=2))
+    balance = Column(Numeric(scale=2))
 
-    account = relationship("Account", back_populates="balances")
+    account = relationship("Account", cascade='all,delete', back_populates="balances")
 
-    def __init__(self, balance_id, account_id, currency_id, balance, currency):
-        self.balance_id = balance_id
-        self.account_id = account_id
+    def __init__(self, currency_id, balance):
         self.currency_id = currency_id
         self.balance = balance
-        self.currency = currency
 
     @staticmethod
     def __dir__():
         return ['balance_id', 'account_id', 'currency_id', 'balance']
+
+    def __repr__(self):
+        return 'Balance currency_id %s, balance %s' % (self.currency_id, self.balance)

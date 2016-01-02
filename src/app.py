@@ -1,12 +1,12 @@
 from flask import Flask, jsonify, make_response
 
-from config import RESPONSE_NOT_FOUND, DB, MyConfig
+from config import RESPONSE_NOT_FOUND, DB, DevConfig
 from urls import rules
 from flask_restful import Api
 
 
 app = Flask(__name__)
-app.config.from_object(MyConfig)
+app.config.from_object(DevConfig)
 DB.init_app(app)
 with app.app_context():
     DB.create_all()
@@ -21,4 +21,4 @@ def not_found(error):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

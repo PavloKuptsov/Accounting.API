@@ -1,3 +1,4 @@
+from flask.ext.httpauth import HTTPBasicAuth
 from flask.ext.sqlalchemy import SQLAlchemy
 
 from custom_json_encoder import CustomJSONEncoder
@@ -5,6 +6,7 @@ from custom_json_encoder import CustomJSONEncoder
 DB_HOST = 'localhost'
 DB_PORT = 5432
 DB_NAME = 'accounting'
+DB_NAME_TEST = 'accounting_test'
 DB_USER = 'accounting'
 DB_PASSWORD = 'accounting'
 
@@ -14,14 +16,18 @@ RESPONSE_CREATED = 201
 RESPONSE_NOT_FOUND = 404
 RESPONSE_SERVER_ERROR = 500
 
-RESULT_STATUS = 'status'
-RESULT_RESPONSE = 'response'
-RESULT_ERRORS = 'errors'
-
 DB = SQLAlchemy()
+auth = HTTPBasicAuth()
 
 
-class MyConfig(object):
+class DevConfig(object):
     RESTFUL_JSON = {'cls': CustomJSONEncoder}
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///C:\\accounting.sqlite'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://%s:%s@%s/%s' % (DB_USER, DB_PASSWORD, DB_HOST, DB_NAME)
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+
+
+class TestConfig(object):
+    RESTFUL_JSON = {'cls': CustomJSONEncoder}
+    SQLALCHEMY_DATABASE_URI = 'postgresql://%s:%s@%s/%s' % (DB_USER, DB_PASSWORD, DB_HOST, DB_NAME_TEST)
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
+

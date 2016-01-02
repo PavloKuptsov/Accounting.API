@@ -1,6 +1,0 @@
-DROP TABLE IF EXISTS tag;
-
-CREATE TABLE tag (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100)
-);
