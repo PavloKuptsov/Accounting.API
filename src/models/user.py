@@ -12,7 +12,7 @@ class User(DB.Model):
     user_id = Column(Integer, primary_key=True)
     username = Column(String(128), unique=True)
     password = Column(String(128))
-    accounts = relationship(Account, cascade="all,delete")
+    accounts = relationship(Account, cascade='all, delete-orphan', backref='user')
 
     def __init__(self, username, password, accounts):
         self.username = username

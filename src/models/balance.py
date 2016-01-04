@@ -11,8 +11,6 @@ class Balance(DB.Model):
     currency_id = Column(Integer)
     balance = Column(Numeric(scale=2))
 
-    account = relationship("Account", cascade='all,delete', back_populates="balances")
-
     def __init__(self, currency_id, balance):
         self.currency_id = currency_id
         self.balance = balance
@@ -22,4 +20,4 @@ class Balance(DB.Model):
         return ['balance_id', 'account_id', 'currency_id', 'balance']
 
     def __repr__(self):
-        return 'Balance currency_id %s, balance %s' % (self.currency_id, self.balance)
+        return '<Balance balance_id = %s, currency_id = %s, balance = %s>' % (self.balance_id, self.currency_id, self.balance)

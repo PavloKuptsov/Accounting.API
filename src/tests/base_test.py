@@ -1,7 +1,8 @@
 import json
-import unittest
 
 import base64
+
+from datetime import datetime
 from flask import Flask
 from flask.ext.restful import Api
 from flask.ext.testing import TestCase
@@ -27,7 +28,7 @@ class BaseTest(TestCase):
     def setUp(self):
         DB.create_all()
         self.repository = Repository()
-        self.create_user(TEST_USERNAME, TEST_PASSWORD)
+        self.repository.create_initial_testing_data()
 
     def tearDown(self):
         DB.session.remove()
@@ -41,9 +42,6 @@ class BaseTest(TestCase):
 
     def create_valid_balance(self):
         self.repository.add_balance(1, 1, 25.5)
-
-    def create_user(self, username, password):
-        self.repository.create_user(username, password)
 
     def get_auth_headers(self):
         h = Headers()
@@ -70,12 +68,10 @@ class BaseTest(TestCase):
                                    headers=auth and self.get_auth_headers() or '')
         return response
 
-    def delete(self, url, data, auth):
+    def delete(self, url, auth):
         response = self.client.delete(url,
-                                      data=json.dumps(data),
-                                      content_type='application/json',
                                       headers=auth and self.get_auth_headers() or '')
         return response
 
-if __name__ == '__main__':
-    unittest.main()
+    def get_today(self):
+        return datetime.now().date()

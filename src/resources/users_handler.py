@@ -5,7 +5,7 @@ from base_handler import BaseHandler
 from user import User
 
 
-class SignupHandler(BaseHandler):
+class UsersHandler(BaseHandler):
 
     def post(self):
         username = request.get_json().get('username')

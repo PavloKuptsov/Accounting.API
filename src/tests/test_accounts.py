@@ -1,40 +1,40 @@
 from balance import Balance
 from base_test import BaseTest
-from test_data import TEST_ACCOUNT, TEST_USERNAME2, TEST_PASSWORD2
+from test_data import TEST_ACCOUNT, TEST_USERNAME2, TEST_PASSWORD2, URL_ACCOUNTS, url_account
 
 
 class TestAccounts(BaseTest):
 
     def test_func_401(self):
-        response = self.get('/api/accounts/', False)
+        response = self.get(URL_ACCOUNTS, False)
         self.assert401(response)
         self.assertTrue('WWW-Authenticate' in response.headers)
         self.assertTrue('Basic' in response.headers['WWW-Authenticate'])
 
     def test_func_204(self):
         self.repository.delete_account(1)
-        response = self.get('/api/accounts/', True)
+        response = self.get(URL_ACCOUNTS, True)
         self.assert_status(response, 204)
 
     def test_func_add_account(self):
-        response = self.post('/api/accounts/', dict(type_id=1, name=u'CC', currency_id=1, balance=0), True)
+        response = self.post(URL_ACCOUNTS, dict(type_id=1, name=u'CC', currency_id=1, balance=0), True)
         self.assert_status(response, 201)
 
     def test_func_auth_enter(self):
-        response = self.get('/api/accounts/', True)
+        response = self.get(URL_ACCOUNTS, True)
         self.assert200(response)
 
     def test_func_list_accounts(self):
-        self.create_user(TEST_USERNAME2, TEST_PASSWORD2)
-        response = self.get('/api/accounts/', True)
+        self.repository.create_user(TEST_USERNAME2, TEST_PASSWORD2)
+        response = self.get(URL_ACCOUNTS, True)
         self.assertEquals(response.json, TEST_ACCOUNT)
 
     def test_func_adding_duplicate_account_fails(self):
-        response = self.post('/api/accounts/', dict(type_id=1, name=u'Cash', currency_id=1, balance=0), True)
-        self.assert400(response, message='Account already exists')
+        response = self.post(URL_ACCOUNTS, dict(type_id=1, name=u'Cash', currency_id=1, balance=0), True)
+        self.assert400(response)
 
     def test_func_rename_account(self):
-        response = self.put('/api/accounts/1/', dict(type_id=2, name=u'CC'), True)
+        response = self.put(url_account(1), dict(type_id=2, name=u'CC'), True)
         print(response.data)
         self.assert200(response)
         acc = self.repository.list_user_accounts(1)[0]

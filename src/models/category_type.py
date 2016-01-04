@@ -2,8 +2,8 @@ from sqlalchemy import Column, Integer, Unicode
 from config import DB
 
 
-class TransactionType(DB.Model):
-    __tablename__ = 'transaction_type'
+class CategoryType(DB.Model):
+    __tablename__ = 'category_type'
     type_id = Column(Integer, primary_key=True)
     name = Column(Unicode(100))
 
