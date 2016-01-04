@@ -1,4 +1,6 @@
 # coding=utf-8
+from decimal import Decimal
+
 from datetime import datetime
 
 from account import Account
@@ -105,7 +107,7 @@ class Repository(object):
                             child_to)
         balance = Balance.query.filter_by(balance_id=balance_id).first()
         DB.session.add(trans)
-        DB.session.commit()
+        DB.session.flush()
         if transaction_type_id == TRANSACTION_TYPE_INCOME:
             balance.balance += amount
         elif transaction_type_id == TRANSACTION_TYPE_SPENDING:
@@ -117,7 +119,7 @@ class Repository(object):
             # print('balance: ' + str(balance))
             balance.balance -= amount
             self.add_transaction(transaction_type_id=transaction_type_id,
-                                 amount=amount*exchange_rate,
+                                 amount=Decimal(amount*exchange_rate),
                                  balance_id=target_balance_id,
                                  category_id=None,
                                  comment=None,
