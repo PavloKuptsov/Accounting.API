@@ -9,7 +9,7 @@ class CategoriesHandler(BaseHandler):
 
     @auth.login_required
     def get(self):
-        categories = self.repository.list_categories(g.user.user_id)
+        categories = self.repository.categories_list(g.user.user_id)
         if not categories:
             return make_response(jsonify(), 204)
         return categories
@@ -21,7 +21,11 @@ class CategoriesHandler(BaseHandler):
         parent_category_id = request.get_json().get('parent_category_id')
         type_id = request.get_json().get('type_id')
 
-        if self.repository.is_category_a_duplicate(user_id, name, parent_category_id):
+        if self.repository.category_is_a_duplicate(user_id, name, parent_category_id):
             abort(400, error='Category already exists')
-        category_id = self.repository.create_category(user_id, name, parent_category_id, type_id)
+        category_id = self.repository.category_create(user_id, name, parent_category_id, type_id)
         return make_response(jsonify({'category_id': category_id}), 201)
+
+    @auth.login_required
+    def put(self):
+        pass

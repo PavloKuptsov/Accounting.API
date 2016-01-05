@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Unicode, ForeignKey
+from sqlalchemy import Column, Integer, Unicode, ForeignKey, Boolean
 from config import DB
 
 
@@ -9,6 +9,7 @@ class Category(DB.Model):
     name = Column(Unicode(100))
     parent_category_id = Column(Integer)
     type_id = Column(Integer, ForeignKey('category_type.type_id'))
+    is_favorite = Column(Boolean, default=False)
 
     def __init__(self, user_id, name, parent_category_id, type_id):
         self.user_id = user_id
@@ -18,4 +19,4 @@ class Category(DB.Model):
 
     @staticmethod
     def __dir__():
-        return ['category_id', 'name', 'parent_category_id', 'type_id']
+        return ['category_id', 'name', 'parent_category_id', 'type_id', 'is_favorite']

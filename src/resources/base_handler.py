@@ -14,7 +14,7 @@ class BaseHandler(Resource):
 @auth.verify_password
 def verify_password(username, password):
     repository = Repository()
-    user = repository.search_user(username)
+    user = repository.user_search(username)
     if not user or not user.verify_password(password):
         return False
     g.user = user

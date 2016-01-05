@@ -14,5 +14,5 @@ class UsersHandler(BaseHandler):
             abort(400, error='No input parameters')
         if User.query.filter_by(username=username).first() is not None:
             abort(400, error='User already exists')
-        user_id = self.repository.create_user(username, password)
+        user_id = self.repository.user_create(username, password)
         return make_response(jsonify({'username': username, 'user_id': user_id}), 201)

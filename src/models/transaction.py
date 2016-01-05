@@ -14,6 +14,7 @@ class Transaction(DB.Model):
     date = Column(Date)
     exchange_rate = Column(Numeric(scale=6), default=1)
     child_to = Column(Integer, default=None)
+    order = Column(Integer, default=1)
 
     def __init__(self, transaction_type_id, amount, balance_id, category_id, comment, date, exchange_rate, child_to):
         self.transaction_type_id = transaction_type_id
@@ -28,4 +29,4 @@ class Transaction(DB.Model):
     @staticmethod
     def __dir__():
         return ['transaction_id', 'transaction_type_id', 'amount', 'balance_id', 'target_balance_id',
-                'previous_balance', 'category_id', 'comment', 'date', 'exchange_rate', 'child_to']
+                'previous_balance', 'category_id', 'comment', 'date', 'exchange_rate', 'child_to', 'order']
