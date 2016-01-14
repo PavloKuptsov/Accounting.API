@@ -13,6 +13,7 @@ URL_USERS = '/api/users/'
 URL_ACCOUNTS = '/api/accounts/'
 URL_BALANCES = '/api/balances/'
 URL_CATEGORIES = '/api/categories/'
+URL_TRANSACTIONS = '/api/transactions/'
 
 
 def url_user(user_id):
@@ -29,3 +30,7 @@ def url_balance(balance_id):
 
 def url_category(category_id):
     return URL_CATEGORIES + str(category_id) + '/'
+
+
+def url_transaction(transaction_id):
+    return URL_TRANSACTIONS + str(transaction_id) + '/'

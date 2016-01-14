@@ -1,6 +1,8 @@
 # coding=utf-8
 from decimal import Decimal
 
+from datetime import datetime
+
 from account import Account
 from account_type import AccountType
 from balance import Balance
@@ -114,12 +116,14 @@ class Repository(object):
         return bool(cat)
 
     def transaction_create(self, transaction_type_id, amount, balance_id, category_id, comment, date, exchange_rate,
-                           child_to, target_balance_id):
+                           target_balance_id, child_to=None):
         trans = Transaction(transaction_type_id, amount, balance_id, category_id, comment, date, exchange_rate,
                             child_to)
         balance = Balance.query.filter_by(balance_id=balance_id).first()
+
         DB.session.add(trans)
         DB.session.flush()
+
         if transaction_type_id == TRANSACTION_TYPE_INCOME:
             balance.balance += amount
         elif transaction_type_id == TRANSACTION_TYPE_SPENDING:
@@ -131,7 +135,7 @@ class Repository(object):
             # print('balance: ' + str(balance))
             balance.balance -= amount
             self.transaction_create(transaction_type_id=transaction_type_id,
-                                    amount=Decimal(amount*exchange_rate),
+                                    amount=Decimal(amount * exchange_rate),
                                     balance_id=target_balance_id,
                                     category_id=None,
                                     comment=None,
@@ -142,6 +146,79 @@ class Repository(object):
         else:
             balance.balance += amount
         DB.session.commit()
+        return trans.transaction_id
+
+    def transaction_delete(self, transaction_id):
+        trans = Transaction.query.filter_by(transaction_id=transaction_id).first()
+        balance = Balance.query.filter_by(balance_id=trans.balance_id).first()
+
+        if trans.transaction_type_id == TRANSACTION_TYPE_INCOME:
+            balance.balance -= trans.amount
+        elif trans.transaction_type_id == TRANSACTION_TYPE_SPENDING:
+            balance.balance += trans.amount
+        else:
+            child_trans = Transaction.query.filter_by(child_to=trans.transaction_id).first()
+            target_balance = Balance.query.filter_by(balance_id=child_trans.balance_id).first()
+            balance.balance += trans.amount
+            target_balance.balance -= child_trans.amount
+            DB.session.delete(child_trans)
+        DB.session.delete(trans)
+        DB.session.commit()
+
+    def transaction_change(self, transaction_id, transaction_type_id, amount, balance_id, category_id, comment, date,
+                           exchange_rate, target_balance_id):
+        trans = Transaction.query.filter_by(transaction_id=transaction_id).first()
+        balance = Balance.query.filter_by(balance_id=balance_id).first()
+
+        if trans.transaction_type_id == TRANSACTION_TYPE_INCOME:
+            balance.balance -= trans.amount
+        elif trans.transaction_type_id == TRANSACTION_TYPE_SPENDING:
+            balance.balance += trans.amount
+        elif trans.transaction_type_id == TRANSACTION_TYPE_TRANSFER:
+            child_trans = Transaction.query.filter_by(child_to=trans.transaction_id).first()
+            target_balance = Balance.query.filter_by(balance_id=child_trans.balance_id).first()
+            balance.balance += trans.amount
+            target_balance.balance -= child_trans.amount
+            DB.session.delete(child_trans)
+
+        trans.transaction_type_id = transaction_type_id
+        trans.amount = amount
+        trans.balance_id = balance_id
+        trans.category_id = category_id
+        trans.comment = comment
+        trans.date = date
+        trans.exchange_rate = exchange_rate
+
+        if transaction_type_id == TRANSACTION_TYPE_INCOME:
+            balance.balance += amount
+        elif transaction_type_id == TRANSACTION_TYPE_SPENDING:
+            balance.balance -= amount
+        elif transaction_type_id == TRANSACTION_TYPE_TRANSFER:
+            balance.balance -= amount
+            self.transaction_create(transaction_type_id=transaction_type_id,
+                                    amount=Decimal(amount * exchange_rate),
+                                    balance_id=target_balance_id,
+                                    category_id=None,
+                                    comment=None,
+                                    date=None,
+                                    exchange_rate=None,
+                                    child_to=trans.transaction_id,
+                                    target_balance_id=None)
+        else:
+            balance.balance += amount
+        DB.session.commit()
+        return trans.transaction_id
+
+    def transaction_search_by_account(self, account_id):
+        balance_ids = Balance.query.with_entities(Balance.balance_id).filter_by(account_id=account_id).all()
+        transactions = Transaction.query.filter(Transaction.balance_id.in_(balance_ids)).all()
+        return transactions
+
+    def transactions_search_by_user_id(self, user_id):
+        account_ids = Account.query.with_entities(Account.account_id).filter_by(user_id=user_id).all()
+        balance_ids = Balance.query.with_entities(Balance.balance_id).filter(Balance.account_id.in_(account_ids)).all()
+        transactions = Transaction.query.filter(Transaction.balance_id.in_(balance_ids)).all()
+        return transactions
 
     def transactions_search_by_category_id(self, category_id):
         return Transaction.query.filter_by(category_id=category_id).all()
@@ -172,3 +249,4 @@ class Repository(object):
         DB.session.add(Currency(4, u'British pound', 'GBP', u'£'))
         DB.session.add(Currency(5, u'Russian ruble', 'RUB', u'₽'))
         DB.session.commit()
+        # self.transaction_create(1, 100, 1, 1, u'Test income trans', datetime.now().date(), 1, None)

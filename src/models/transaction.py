@@ -28,5 +28,5 @@ class Transaction(DB.Model):
 
     @staticmethod
     def __dir__():
-        return ['transaction_id', 'transaction_type_id', 'amount', 'balance_id', 'target_balance_id',
-                'previous_balance', 'category_id', 'comment', 'date', 'exchange_rate', 'child_to', 'order']
+        return ['transaction_id', 'transaction_type_id', 'amount', 'balance_id', 'category_id', 'comment', 'date',
+                'exchange_rate', 'child_to', 'order']

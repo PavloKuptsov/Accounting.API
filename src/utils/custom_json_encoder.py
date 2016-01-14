@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from decimal import Decimal
 from flask import json
 from sqlalchemy.ext.declarative import DeclarativeMeta
@@ -28,6 +28,9 @@ class CustomJSONEncoder(json.JSONEncoder):
             return str(obj)
 
         if isinstance(obj, datetime):
+            return obj.isoformat()
+
+        if isinstance(obj, date):
             return obj.isoformat()
         # lists
         try:
