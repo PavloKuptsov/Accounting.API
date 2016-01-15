@@ -1,5 +1,3 @@
-from flask import request, jsonify
-
 from base_handler import BaseHandler
 from config import auth
 

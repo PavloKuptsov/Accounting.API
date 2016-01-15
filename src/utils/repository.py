@@ -129,10 +129,6 @@ class Repository(object):
         elif transaction_type_id == TRANSACTION_TYPE_SPENDING:
             balance.balance -= amount
         elif transaction_type_id == TRANSACTION_TYPE_TRANSFER and not child_to:
-            # print('transaction_type_id: ' + str(transaction_type_id))
-            # print('child_to: ' + str(child_to))
-            # print('balance_id: ' + str(balance_id))
-            # print('balance: ' + str(balance))
             balance.balance -= amount
             self.transaction_create(transaction_type_id=transaction_type_id,
                                     amount=Decimal(amount * exchange_rate),

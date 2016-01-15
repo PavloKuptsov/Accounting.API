@@ -1,4 +1,4 @@
-from flask import g, request, make_response, jsonify
+from flask import request, make_response, jsonify
 from flask.ext.restful import abort
 
 from base_handler import BaseHandler

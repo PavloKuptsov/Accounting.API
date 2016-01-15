@@ -1,4 +1,4 @@
-from flask import request, make_response, jsonify, g
+from flask import request, make_response, jsonify
 
 from base_handler import BaseHandler
 from config import auth

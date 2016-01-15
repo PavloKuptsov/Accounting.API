@@ -3,7 +3,6 @@ from flask.ext.restful import abort
 
 from base_handler import BaseHandler, verify_password
 from config import auth
-from user import User
 
 
 class UserHandler(BaseHandler):
