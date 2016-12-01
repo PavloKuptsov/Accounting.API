@@ -1,14 +1,14 @@
-from balance_handler import BalanceHandler
-from balances_handler import BalancesHandler
 from models.url_rule import UrlRule
-from account_handler import AccountHandler
-from accounts_handler import AccountsHandler
-from categories_handler import CategoriesHandler
-from category_handler import CategoryHandler
-from transaction_handler import TransactionHandler
-from transactions_handler import TransactionsHandler
-from user_handler import UserHandler
-from users_handler import UsersHandler
+from resources.balance_handler import BalanceHandler
+from resources.balances_handler import BalancesHandler
+from resources.account_handler import AccountHandler
+from resources.accounts_handler import AccountsHandler
+from resources.categories_handler import CategoriesHandler
+from resources.category_handler import CategoryHandler
+from resources.transaction_handler import TransactionHandler
+from resources.transactions_handler import TransactionsHandler
+from resources.user_handler import UserHandler
+from resources.users_handler import UsersHandler
 
 rules = [
     UrlRule('/api/users/', UsersHandler, 'users'),

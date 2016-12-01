@@ -1,5 +1,5 @@
-from base_test import BaseTest
-from test_data import URL_BALANCES
+from tests.base_test import BaseTest
+from tests.test_data import URL_BALANCES
 
 
 class TestBalances(BaseTest):

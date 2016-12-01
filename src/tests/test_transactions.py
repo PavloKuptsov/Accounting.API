@@ -1,12 +1,12 @@
-from base_test import BaseTest
-from test_data import URL_TRANSACTIONS, url_transaction
+from tests.base_test import BaseTest
+from tests.test_data import URL_TRANSACTIONS, url_transaction
 
 TEST_TRANSACTION = [{'comment': u'Test income trans',
                      'child_to': None,
-                     'exchange_rate': 1,
-                     'amount': 100,
+                     'exchange_rate': '1',
+                     'amount': '100',
                      'balance_id': 1,
-                     'date': u'2016-01-14',
+                     'date': BaseTest.get_today().isoformat(),
                      'transaction_type_id': 1,
                      'category_id': 1,
                      'order': 1,

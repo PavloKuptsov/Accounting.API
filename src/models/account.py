@@ -1,7 +1,7 @@
 from sqlalchemy import Integer, Column, Unicode, ForeignKey
 from sqlalchemy.orm import relationship
 from config import DB
-from balance import Balance
+from models.balance import Balance
 
 
 class Account(DB.Model):

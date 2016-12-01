@@ -4,14 +4,14 @@ import base64
 
 from datetime import datetime
 from flask import Flask
-from flask.ext.restful import Api
-from flask.ext.testing import TestCase
+from flask_restful import Api
+from flask_testing import TestCase
 from werkzeug.datastructures import Headers
 
 from config import DB, TestConfig
-from repository import Repository
-from test_data import TEST_USERNAME, TEST_PASSWORD
+from tests.test_data import TEST_USERNAME, TEST_PASSWORD
 from urls import rules
+from utils.repository import Repository
 
 
 class BaseTest(TestCase):
@@ -46,7 +46,7 @@ class BaseTest(TestCase):
     def get_auth_headers(self):
         h = Headers()
         h.add('Authorization',
-              'Basic ' + base64.b64encode(TEST_USERNAME + ':' + TEST_PASSWORD))
+              'Basic ' + (base64.b64encode((TEST_USERNAME + ':' + TEST_PASSWORD).encode('ascii'))).decode('ascii'))
         return h
 
     def get(self, url):
@@ -83,7 +83,8 @@ class BaseTest(TestCase):
                                       headers=self.get_auth_headers() or '')
         return response
 
-    def get_today(self):
+    @staticmethod
+    def get_today():
         return datetime.now().date()
 
     def assertErrorTextEquals(self, response, error):

@@ -1,5 +1,5 @@
-from base_test import BaseTest
-from test_data import TEST_USERNAME2, TEST_CREDENTIALS_DICT, TEST_CREDENTIALS_DICT2, URL_USERS, url_user
+from tests.base_test import BaseTest
+from tests.test_data import TEST_USERNAME2, TEST_CREDENTIALS_DICT, TEST_CREDENTIALS_DICT2, URL_USERS, url_user
 
 
 class TestUsers(BaseTest):

@@ -1,8 +1,8 @@
 from flask import request, g, make_response, jsonify
-from flask.ext.restful import abort
+from flask_restful import abort
 
-from base_handler import BaseHandler
 from config import auth
+from resources.base_handler import BaseHandler
 
 
 class CategoriesHandler(BaseHandler):

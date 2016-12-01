@@ -1,8 +1,8 @@
 from flask import request, jsonify, make_response
-from flask.ext.restful import abort
+from flask_restful import abort
 
-from base_handler import BaseHandler
-from user import User
+from models.user import User
+from resources.base_handler import BaseHandler
 
 
 class UsersHandler(BaseHandler):

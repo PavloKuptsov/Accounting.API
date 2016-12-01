@@ -1,7 +1,7 @@
 from flask import request, make_response, jsonify, g
 
-from base_handler import BaseHandler
 from config import auth
+from resources.base_handler import BaseHandler
 
 
 class TransactionsHandler(BaseHandler):

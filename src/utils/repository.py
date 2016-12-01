@@ -1,19 +1,17 @@
 # coding=utf-8
 from decimal import Decimal
 
-from datetime import datetime
-
-from account import Account
-from account_type import AccountType
-from balance import Balance
-from category import Category
-from category_type import CategoryType
 from config import DB
-from currency import Currency
-from global_variables import TRANSACTION_TYPE_INCOME, TRANSACTION_TYPE_SPENDING, TRANSACTION_TYPE_TRANSFER
-from transaction import Transaction
-from transaction_type import TransactionType
-from user import User
+from models.account import Account
+from models.account_type import AccountType
+from models.balance import Balance
+from models.category import Category
+from models.category_type import CategoryType
+from models.currency import Currency
+from models.global_variables import TRANSACTION_TYPE_INCOME, TRANSACTION_TYPE_SPENDING, TRANSACTION_TYPE_TRANSFER
+from models.transaction import Transaction
+from models.transaction_type import TransactionType
+from models.user import User
 
 
 class Repository(object):

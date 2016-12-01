@@ -1,7 +1,7 @@
-from flask.ext.httpauth import HTTPBasicAuth
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_httpauth import HTTPBasicAuth
+from flask_sqlalchemy import SQLAlchemy
 
-from custom_json_encoder import CustomJSONEncoder
+from utils.custom_json_encoder import CustomJSONEncoder
 
 DB_HOST = 'localhost'
 DB_PORT = 5432

@@ -1,5 +1,5 @@
-from base_test import BaseTest
-from test_data import URL_CATEGORIES, url_category
+from tests.base_test import BaseTest
+from tests.test_data import URL_CATEGORIES, url_category
 
 TEST_CATEGORIES_LIST = [{'category_id': 1,
                          'name': u'Sample income category',

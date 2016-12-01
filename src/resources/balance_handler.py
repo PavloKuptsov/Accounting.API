@@ -1,4 +1,4 @@
-from base_handler import BaseHandler
+from resources.base_handler import BaseHandler
 from config import auth
 
 

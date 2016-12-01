@@ -2,9 +2,8 @@ from passlib.apps import custom_app_context as pwd_context
 from sqlalchemy import Integer, Column, String
 from sqlalchemy.orm import relationship
 
-
-from account import Account
 from config import DB
+from models.account import Account
 
 
 class User(DB.Model):

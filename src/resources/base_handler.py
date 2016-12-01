@@ -1,5 +1,5 @@
 from flask import g
-from flask.ext.restful import Resource
+from flask_restful import Resource
 
 from config import auth
 from utils.repository import Repository

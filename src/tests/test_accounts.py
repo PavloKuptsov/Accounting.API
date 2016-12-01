@@ -1,16 +1,17 @@
-from balance import Balance
-from base_test import BaseTest
-from test_data import URL_ACCOUNTS, url_account
+from models.balance import Balance
+from tests.base_test import BaseTest
+from tests.test_data import URL_ACCOUNTS, url_account
 
 TEST_ACCOUNT = [{'type_id': 1,
                  'user_id': 1,
                  'account_id': 1,
                  'name': u'Cash',
                  'balances': [{'currency_id': 3,
-                               'balance': 0,
+                               'balance': '0',
                                'account_id': 1,
                                'balance_id': 1}]
                  }]
+
 
 class TestAccounts(BaseTest):
 
