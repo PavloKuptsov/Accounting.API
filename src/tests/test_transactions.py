@@ -3,7 +3,6 @@ from tests.test_data import URL_TRANSACTIONS, url_transaction
 
 TEST_TRANSACTION = [{'comment': u'Test income trans',
                      'child_to': None,
-                     'exchange_rate': '1',
                      'amount': '100',
                      'balance_id': 1,
                      'date': BaseTest.get_today().isoformat(),
@@ -32,7 +31,6 @@ class TestTransactions(BaseTest):
                                                     category_id=1,
                                                     comment=u'CC',
                                                     date=self.get_today().isoformat(),
-                                                    exchange_rate=1,
                                                     target_balance_id=''))
         self.assert_status(response, 201)
         bal = self.repository.balance_get(1)
@@ -53,7 +51,6 @@ class TestTransactions(BaseTest):
                                                      category_id=1,
                                                      comment=u'CC',
                                                      date=self.get_today().isoformat(),
-                                                     exchange_rate=1,
                                                      target_balance_id=''))
         self.assert200(response)
         bal = self.repository.balance_get(1)

@@ -28,4 +28,5 @@ class CategoriesHandler(BaseHandler):
 
     @auth.login_required
     def put(self):
-        pass #TODO: Migrate transactions to other category
+        # TODO: Migrate transactions to other category
+        pass

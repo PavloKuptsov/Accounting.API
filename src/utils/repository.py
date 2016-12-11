@@ -113,10 +113,9 @@ class Repository(object):
         cat = Category.query.filter_by(user_id=user_id, name=name, parent_category_id=parent_category_id).first()
         return bool(cat)
 
-    def transaction_create(self, transaction_type_id, amount, balance_id, category_id, comment, date, exchange_rate,
+    def transaction_create(self, transaction_type_id, amount, balance_id, category_id, comment, date,
                            target_balance_id, child_to=None):
-        trans = Transaction(transaction_type_id, amount, balance_id, category_id, comment, date, exchange_rate,
-                            child_to)
+        trans = Transaction(transaction_type_id, amount, balance_id, category_id, comment, date, child_to)
         balance = Balance.query.filter_by(balance_id=balance_id).first()
 
         DB.session.add(trans)
@@ -129,12 +128,11 @@ class Repository(object):
         elif transaction_type_id == TRANSACTION_TYPE_TRANSFER and not child_to:
             balance.balance -= amount
             self.transaction_create(transaction_type_id=transaction_type_id,
-                                    amount=Decimal(amount * exchange_rate),
+                                    amount=amount,
                                     balance_id=target_balance_id,
                                     category_id=None,
                                     comment=None,
                                     date=None,
-                                    exchange_rate=None,
                                     child_to=trans.transaction_id,
                                     target_balance_id=None)
         else:
@@ -160,7 +158,7 @@ class Repository(object):
         DB.session.commit()
 
     def transaction_change(self, transaction_id, transaction_type_id, amount, balance_id, category_id, comment, date,
-                           exchange_rate, target_balance_id):
+                           target_balance_id):
         trans = Transaction.query.filter_by(transaction_id=transaction_id).first()
         balance = Balance.query.filter_by(balance_id=balance_id).first()
 
@@ -181,7 +179,6 @@ class Repository(object):
         trans.category_id = category_id
         trans.comment = comment
         trans.date = date
-        trans.exchange_rate = exchange_rate
 
         if transaction_type_id == TRANSACTION_TYPE_INCOME:
             balance.balance += amount
@@ -190,12 +187,11 @@ class Repository(object):
         elif transaction_type_id == TRANSACTION_TYPE_TRANSFER:
             balance.balance -= amount
             self.transaction_create(transaction_type_id=transaction_type_id,
-                                    amount=Decimal(amount * exchange_rate),
+                                    amount=amount,
                                     balance_id=target_balance_id,
                                     category_id=None,
                                     comment=None,
                                     date=None,
-                                    exchange_rate=None,
                                     child_to=trans.transaction_id,
                                     target_balance_id=None)
         else:

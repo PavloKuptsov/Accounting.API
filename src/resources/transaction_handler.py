@@ -19,8 +19,7 @@ class TransactionHandler(BaseHandler):
         category_id = request.get_json().get('category_id')
         comment = request.get_json().get('comment')
         date = request.get_json().get('date')
-        exchange_rate = request.get_json().get('exchange_rate')
 
         transaction_id = self.repository.transaction_change(transaction_id, transaction_type_id, amount, balance_id,
-                                                            category_id, comment, date, exchange_rate, None)
+                                                            category_id, comment, date, None)
         return make_response(jsonify({'transaction_id': transaction_id}), 200)

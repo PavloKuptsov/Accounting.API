@@ -12,21 +12,19 @@ class Transaction(DB.Model):
     category_id = Column(Integer, ForeignKey('category.category_id'))
     comment = Column(Unicode(255))
     date = Column(Date)
-    exchange_rate = Column(Numeric(scale=6), default=1)
     child_to = Column(Integer, default=None)
     order = Column(Integer, default=1)
 
-    def __init__(self, transaction_type_id, amount, balance_id, category_id, comment, date, exchange_rate, child_to):
+    def __init__(self, transaction_type_id, amount, balance_id, category_id, comment, date, child_to):
         self.transaction_type_id = transaction_type_id
         self.amount = amount
         self.balance_id = balance_id
         self.category_id = category_id
         self.comment = comment
         self.date = date
-        self.exchange_rate = exchange_rate
         self.child_to = child_to
 
     @staticmethod
     def __dir__():
         return ['transaction_id', 'transaction_type_id', 'amount', 'balance_id', 'category_id', 'comment', 'date',
-                'exchange_rate', 'child_to', 'order']
+                'child_to', 'order']
