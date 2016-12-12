@@ -7,7 +7,7 @@ class TestUsers(BaseTest):
     def test_func_user_created(self):
         response = self.post_no_auth(URL_USERS, TEST_CREDENTIALS_DICT2)
         self.assert_status(response, 201)
-        user = self.repository.user_search(TEST_USERNAME2)
+        user = self.repository.users.user_search(TEST_USERNAME2)
         self.assertTrue(user and user.username == TEST_USERNAME2)
 
     def test_func_duplicate_user_creation_fails(self):

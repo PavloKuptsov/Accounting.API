@@ -8,7 +8,7 @@ class TransactionsHandler(BaseHandler):
 
     @auth.login_required
     def get(self):
-        transactions = self.repository.transactions_search_by_user_id(g.user.user_id)
+        transactions = self.repository.transactions.transactions_search_by_user_id(g.user.user_id)
         if not transactions:
             return make_response(jsonify(), 204)
         return transactions
@@ -22,6 +22,6 @@ class TransactionsHandler(BaseHandler):
         comment = request.get_json().get('comment')
         date = request.get_json().get('date')
 
-        transaction_id = self.repository.transaction_create(transaction_type_id, amount, balance_id, category_id,
-                                                            comment, date, None)
+        transaction_id = self.repository.transactions.transaction_create(transaction_type_id, amount, balance_id,
+                                                                         category_id, comment, date, None)
         return make_response(jsonify({'transaction_id': transaction_id}), 201)

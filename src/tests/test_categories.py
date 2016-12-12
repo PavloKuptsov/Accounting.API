@@ -52,22 +52,22 @@ class TestCategories(BaseTest):
         self.assert200(response)
 
     def test_func_deletion_of_used_category_fails(self):
-        self.repository.transaction_create(2, 100, 1, 3, u'', self.get_today(), 1, None, None)
+        self.repository.transactions.transaction_create(2, 100, 1, 3, u'', self.get_today(), None, None)
         response = self.delete(url_category(3))
         self.assert400(response)
         self.assertErrorTextEquals(response, 'Cannot delete category which has transactions')
 
     def test_unit_rename_category(self):
-        self.repository.category_change(3, u'Renamed category', 2)
-        cat = self.repository.category_get(3)
+        self.repository.categories.category_change(3, u'Renamed category', 2)
+        cat = self.repository.categories.category_get(3)
         self.assertEqual(cat.name, u'Renamed category')
 
     def test_unit_change_category_parent(self):
-        self.repository.category_change(3, u'Sample child spending category', 0)
-        cat = self.repository.category_get(3)
+        self.repository.categories.category_change(3, u'Sample child spending category', 0)
+        cat = self.repository.categories.category_get(3)
         self.assertEqual(cat.parent_category_id, 0)
 
     def test_unit_delete_category(self):
-        self.repository.category_delete(3)
-        category = self.repository.category_get(3)
+        self.repository.categories.category_delete(3)
+        category = self.repository.categories.category_get(3)
         self.assertEqual(category, None)

@@ -2,7 +2,7 @@ from flask import g
 from flask_restful import Resource
 
 from config import auth
-from utils.repository import Repository
+from repositories.repository import Repository
 
 
 class BaseHandler(Resource):
@@ -14,7 +14,7 @@ class BaseHandler(Resource):
 @auth.verify_password
 def verify_password(username, password):
     repository = Repository()
-    user = repository.user_search(username)
+    user = repository.users.user_search(username)
     if not user or not user.verify_password(password):
         return False
     g.user = user

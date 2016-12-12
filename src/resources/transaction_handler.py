@@ -8,7 +8,7 @@ class TransactionHandler(BaseHandler):
 
     @auth.login_required
     def delete(self, transaction_id):
-        self.repository.transaction_delete(transaction_id)
+        self.repository.transactions.transaction_delete(transaction_id)
         return make_response(jsonify({}), 200)
 
     @auth.login_required
@@ -20,6 +20,6 @@ class TransactionHandler(BaseHandler):
         comment = request.get_json().get('comment')
         date = request.get_json().get('date')
 
-        transaction_id = self.repository.transaction_change(transaction_id, transaction_type_id, amount, balance_id,
-                                                            category_id, comment, date, None)
+        transaction_id = self.repository.transactions.transaction_change(transaction_id, transaction_type_id, amount,
+                                                                         balance_id, category_id, comment, date, None)
         return make_response(jsonify({'transaction_id': transaction_id}), 200)

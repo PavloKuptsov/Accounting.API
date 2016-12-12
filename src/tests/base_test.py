@@ -11,7 +11,7 @@ from werkzeug.datastructures import Headers
 from config import DB, TestConfig
 from tests.test_data import TEST_USERNAME, TEST_PASSWORD
 from urls import rules
-from utils.repository import Repository
+from repositories.repository import Repository
 
 
 class BaseTest(TestCase):
@@ -35,15 +35,16 @@ class BaseTest(TestCase):
         DB.drop_all()
 
     def create_valid_account(self):
-        self.repository.account_create(1, u'Cash', 1, 1, 15.5)
+        self.repository.accounts.account_create(1, u'Cash', 1, 1, 15.5)
 
     def create_other_valid_account(self):
-        self.repository.account_create(2, u'CC', 1, 1, 25)
+        self.repository.accounts.account_create(2, u'CC', 1, 1, 25)
 
     def create_valid_balance(self):
-        self.repository.balance_create(1, 1, 25.5)
+        self.repository.balances.balance_create(1, 1, 25.5)
 
-    def get_auth_headers(self):
+    @staticmethod
+    def get_auth_headers():
         h = Headers()
         h.add('Authorization',
               'Basic ' + (base64.b64encode((TEST_USERNAME + ':' + TEST_PASSWORD).encode('ascii'))).decode('ascii'))

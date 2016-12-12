@@ -4,7 +4,7 @@ from config import RESPONSE_NOT_FOUND, DB, DevConfig
 from urls import rules
 from flask_restful import Api
 
-from utils.repository import Repository
+from repositories.repository import Repository
 
 app = Flask(__name__)
 app.config.from_object(DevConfig)

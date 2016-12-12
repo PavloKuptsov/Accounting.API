@@ -9,6 +9,6 @@ class TestBalances(BaseTest):
         self.assert_status(response, 201)
 
     def test_func_adding_duplicate_balance_fails(self):
-        response = self.post(URL_BALANCES, dict(account_id=1, currency_id=3, balance=0))
+        response = self.post(URL_BALANCES, dict(account_id=1, currency_id=1, balance=0))
         self.assert400(response)
         self.assertErrorTextEquals(response, 'Account already has this currency')
