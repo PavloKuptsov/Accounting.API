@@ -113,7 +113,7 @@ class TestTransactions(BaseTest):
                                                         category_id=None,
                                                         comment=u'Test transfer 2',
                                                         date=self.get_today(),
-                                                        child_to=1,
+                                                        target_balance_id=1,
                                                         target_amount=75)
         bal1 = self.repository.balances.balance_get(1)
         bal2 = self.repository.balances.balance_get(2)
