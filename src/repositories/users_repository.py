@@ -1,7 +1,6 @@
 # coding=utf-8
 
 from config import DB
-from models.account import Account
 from models.user import User
 
 
@@ -9,10 +8,8 @@ class UsersRepository(object):
 
     @staticmethod
     def user_create(username, password):
-        account = Account(1, u'Cash', 1, 0)
         user = User(username, password, [])
         user.hash_password(password)
-        user.accounts = [account]
         DB.session.add(user)
         DB.session.commit()
         return user.user_id

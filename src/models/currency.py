@@ -18,3 +18,6 @@ class Currency(DB.Model):
     @staticmethod
     def __dir__():
         return ['currency_id', 'name', 'short_name', 'sign']
+
+    def __repr__(self):
+        return '<Currency id={}, abbr={}, name={}'.format(self.currency_id, self.short_name, self.name)

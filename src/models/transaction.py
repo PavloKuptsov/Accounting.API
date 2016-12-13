@@ -28,3 +28,9 @@ class Transaction(DB.Model):
     def __dir__():
         return ['transaction_id', 'transaction_type_id', 'amount', 'balance_id', 'category_id', 'comment', 'date',
                 'child_to', 'order']
+
+    def __repr__(self):
+        return '<Transaction id={}, type={}, amount={}, balance={}'.format(self.transaction_id,
+                                                                           self.transaction_type_id,
+                                                                           self.amount,
+                                                                           self.balance_id)

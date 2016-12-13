@@ -15,7 +15,7 @@ with app.app_context():
     DB.create_all()
     Repository().create_initial_testing_data()
     importer = Importer(Repository(), 1)
-    importer.parse('D:\\trans.csv')
+    importer.parse('D:\\Downloads\\trans.csv')
 api = Api(app)
 for rule in rules:
     api.add_resource(rule.view, rule.url)

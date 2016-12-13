@@ -57,6 +57,7 @@ class Repository(object):
     def create_initial_testing_data(self):
         self.create_initial_data()
         self.users.user_create('test_username', 'test_password')
-        self.categories.category_create(1, u'Sample income category', None, 1)
-        self.categories.category_create(1, u'Sample spending category', None, 2)
-        self.categories.category_create(1, u'Sample child spending category', 2, 2)
+        # self.accounts.account_create(1, 'Cash', 1, 1, 0)
+        # self.categories.category_create(1, u'Sample income category', None, 1)
+        # self.categories.category_create(1, u'Sample spending category', None, 2)
+        # self.categories.category_create(1, u'Sample child spending category', 2, 2)

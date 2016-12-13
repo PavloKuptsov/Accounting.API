@@ -1,6 +1,9 @@
 from datetime import datetime
 from decimal import Decimal
 
+from models.global_variables import TRANSACTION_TYPE_TRANSFER, TRANSACTION_TYPE_INCOME, CATEGORY_TYPE_INCOME, \
+    CATEGORY_TYPE_SPENDING, TRANSACTION_TYPE_SPENDING
+
 
 class Importer(object):
 
@@ -14,12 +17,15 @@ class Importer(object):
         self.accounts_list = self.get_accounts()
         self.categories_list = self.get_categories()
         self.currencies_list = self.get_currencies()
+        self.last_transaction_id = 0
+        self.last_balance_id = 0
+        self.last_amount = 0
 
     def parse(self, filename):
         with open(filename, 'r', encoding='utf8') as file:
             for line in file:
                 trans_list = line.strip().split(';')
-                if trans_list[0] == 'date':
+                if 'date' in trans_list[0]:
                     continue
                 self.prepare(trans_list)
 
@@ -32,11 +38,37 @@ class Importer(object):
         comment = trans_list[5]
         new_account = trans_list[6]
 
+        child_to = new_account and ('-' not in amount)
         date = self.prepare_date(date)
         balance = self.prepare_account(account, currency)
-        category = category and self.prepare_category(category, amount) or ''
-        amount, transaction_type = self.prepare_amount(amount, new_account)
-        # new_account = self.prepare_account(new_account, currency)
+        if category:
+            category, category_type = self.prepare_category(category, amount)
+        else:
+            category = None
+            category_type = None
+        amount, transaction_type = self.prepare_amount(amount, new_account, category_type, child_to)
+
+        if not child_to:
+            self.last_balance_id = balance
+            self.last_amount = amount
+            self.last_transaction_id = self.repository.transactions.transaction_create(transaction_type_id=transaction_type,
+                                                                                       amount=amount,
+                                                                                       balance_id=balance,
+                                                                                       category_id=category,
+                                                                                       comment=comment,
+                                                                                       date=date,
+                                                                                       target_balance_id=balance,
+                                                                                       target_amount=amount)
+        else:
+            self.repository.transactions.transaction_change(transaction_id=self.last_transaction_id,
+                                                            transaction_type_id=transaction_type,
+                                                            amount=self.last_amount,
+                                                            balance_id=self.last_balance_id,
+                                                            category_id=category,
+                                                            comment=comment,
+                                                            date=date,
+                                                            target_balance_id=balance,
+                                                            target_amount=amount)
         return
 
     def prepare_date(self, date):
@@ -60,31 +92,35 @@ class Importer(object):
 
     def prepare_category(self, category_name, amount):
         category_id = None
+        category_type_id = None
         categories = category_name.split('\\')
         for cat_name in categories:
             category = [item for item in self.categories_list if item.name == cat_name]
             if category:
                 category_id = category[0].category_id
+                category_type_id = category[0].type_id
             else:
-                category_type_id = 2 if '-' in amount else 1
+                category_type_id = CATEGORY_TYPE_SPENDING if '-' in amount else CATEGORY_TYPE_INCOME
                 category_id = self.repository.categories.category_create(self.user_id,
                                                                          cat_name,
                                                                          category_id,
                                                                          category_type_id)
             self.categories_list = self.get_categories()
-        return category_id
+        return category_id, category_type_id
 
-    def prepare_amount(self, amount, new_account):
+    def prepare_amount(self, amount, new_account, category_type_id, child_to):
         if ',' in amount:
             amount = amount.replace(',', '.')
         amount = Decimal(amount)
         if new_account:
-            transaction_type = 3
-        elif amount > 0:
-            transaction_type = 2
+            transaction_type = TRANSACTION_TYPE_TRANSFER
+            if not child_to:
+                amount = -amount
+        elif category_type_id == CATEGORY_TYPE_INCOME:
+            transaction_type = TRANSACTION_TYPE_INCOME
         else:
-            transaction_type = 1
-        amount = abs(amount)
+            transaction_type = TRANSACTION_TYPE_SPENDING
+            amount = -amount
         return amount, transaction_type
 
     def prepare_currency(self, currency):

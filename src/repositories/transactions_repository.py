@@ -38,6 +38,7 @@ class TransactionsRepository(object):
         else:
             balance.balance += amount
         DB.session.commit()
+        print('Created transaction: ' + trans.__repr__())
         return trans.transaction_id
 
     @staticmethod
@@ -60,7 +61,7 @@ class TransactionsRepository(object):
 
     @staticmethod
     def transaction_change(transaction_id, transaction_type_id, amount, balance_id, category_id, comment, date,
-                           target_balance_id=None):
+                           target_balance_id=None, target_amount=None):
         amount = Decimal(amount)
         trans = Transaction.query.filter_by(transaction_id=transaction_id).first()
         balance = Balance.query.filter_by(balance_id=balance_id).first()
@@ -90,7 +91,7 @@ class TransactionsRepository(object):
         elif transaction_type_id == TRANSACTION_TYPE_TRANSFER:
             balance.balance -= amount
             TransactionsRepository.transaction_create(transaction_type_id=transaction_type_id,
-                                                      amount=amount,
+                                                      amount=target_amount,
                                                       balance_id=target_balance_id,
                                                       category_id=None,
                                                       comment=None,
