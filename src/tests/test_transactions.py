@@ -61,7 +61,7 @@ class TestTransactions(BaseTest):
                                                         comment=u'Test income trans',
                                                         date=self.get_today())
         response = self.put(url_transaction(1), dict(transaction_type_id=1,
-                                                     amount=30,
+                                                     amount=30.5,
                                                      balance_id=1,
                                                      category_id=1,
                                                      comment=u'CC',
@@ -69,7 +69,7 @@ class TestTransactions(BaseTest):
                                                      target_balance_id=''))
         self.assert200(response)
         bal = self.repository.balances.balance_get(1)
-        self.assertEqual(bal.balance, 30)
+        self.assertEqual(bal.balance, 30.5)
 
     def test_unit_add_income_transaction(self):
         self.repository.transactions.transaction_create(transaction_type_id=1,

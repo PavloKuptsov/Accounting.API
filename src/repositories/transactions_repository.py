@@ -61,6 +61,7 @@ class TransactionsRepository(object):
     @staticmethod
     def transaction_change(transaction_id, transaction_type_id, amount, balance_id, category_id, comment, date,
                            target_balance_id=None):
+        amount = Decimal(amount)
         trans = Transaction.query.filter_by(transaction_id=transaction_id).first()
         balance = Balance.query.filter_by(balance_id=balance_id).first()
 
