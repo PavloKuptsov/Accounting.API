@@ -20,3 +20,7 @@ class Category(DB.Model):
     @staticmethod
     def __dir__():
         return ['category_id', 'name', 'parent_category_id', 'type_id', 'is_favorite']
+
+    def __repr__(self):
+        return '<Category id=%s, type_id=%s, name=%s, parent_id=%s>' % \
+               (self.category_id, self.type_id, self.name, self.parent_category_id)

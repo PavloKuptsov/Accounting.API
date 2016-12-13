@@ -5,6 +5,7 @@ from urls import rules
 from flask_restful import Api
 
 from repositories.repository import Repository
+from utils.importer import Importer
 
 app = Flask(__name__)
 app.config.from_object(DevConfig)
@@ -13,6 +14,8 @@ with app.app_context():
     DB.drop_all()
     DB.create_all()
     Repository().create_initial_testing_data()
+    importer = Importer(Repository(), 1)
+    importer.parse('D:\\trans.csv')
 api = Api(app)
 for rule in rules:
     api.add_resource(rule.view, rule.url)

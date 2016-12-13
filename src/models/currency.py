@@ -10,8 +10,7 @@ class Currency(DB.Model):
     short_name = Column(String(3))
     sign = Column(Unicode(1))
 
-    def __init__(self, currency_id, name, short_name, sign):
-        self.currency_id = currency_id
+    def __init__(self, name, short_name, sign):
         self.name = name
         self.short_name = short_name
         self.sign = sign

@@ -22,5 +22,5 @@ class Account(DB.Model):
         return ['account_id', 'type_id', 'name', 'user_id', 'balances']
 
     def __repr__(self):
-        return '<Account account_id = %s,\n name = %s \n type_id = %s, \n user_id = %s, \n balances = %s>\n' % \
+        return '<Account id=%s, name=%s, type_id=%s, user_id=%s, balances=%s>' % \
                (self.account_id, self.name, self.type_id, self.user_id, self.balances)
