@@ -14,6 +14,8 @@ class TransactionsRepository(object):
     def transaction_create(transaction_type_id, amount, balance_id, category_id, comment, date,
                            target_balance_id=None, child_to=None, target_amount=None):
         amount = Decimal(amount)
+        if not target_amount:
+            target_amount = amount
         if transaction_type_id == TRANSACTION_TYPE_TRANSFER and target_amount is None:
             target_amount = amount
         trans = Transaction(transaction_type_id, amount, balance_id, category_id, comment, date, child_to)
@@ -63,6 +65,8 @@ class TransactionsRepository(object):
     def transaction_change(transaction_id, transaction_type_id, amount, balance_id, category_id, comment, date,
                            target_balance_id=None, target_amount=None):
         amount = Decimal(amount)
+        if not target_amount:
+            target_amount = amount
         trans = Transaction.query.filter_by(transaction_id=transaction_id).first()
         balance = Balance.query.filter_by(balance_id=balance_id).first()
 
