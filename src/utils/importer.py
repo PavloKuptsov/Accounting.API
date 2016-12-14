@@ -1,3 +1,5 @@
+import sys
+
 from datetime import datetime
 from decimal import Decimal
 
@@ -28,6 +30,8 @@ class Importer(object):
                 if 'date' in trans_list[0]:
                     continue
                 self.prepare(trans_list)
+
+        sys.exit(0)
 
     def prepare(self, trans_list):
         date = trans_list[0]
