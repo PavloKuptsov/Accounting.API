@@ -31,8 +31,6 @@ class Importer(object):
                     continue
                 self.prepare(trans_list)
 
-        sys.exit(0)
-
     def prepare(self, trans_list):
         date = trans_list[0]
         account = trans_list[1]

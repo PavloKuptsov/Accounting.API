@@ -3,6 +3,7 @@ SQLAlchemy
 Flask-RESTful
 Flask-SQLAlchemy
 Flask-Testing
+Flask-Cors
+Flask-HTTPAuth
 psycopg2
 passlib
-Flask-HTTPAuth
